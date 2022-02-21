@@ -27,6 +27,7 @@ import com.microsoft.azure.toolkit.ide.common.component.Node;
 import com.microsoft.azure.toolkit.ide.common.component.NodeView;
 import com.microsoft.azure.toolkit.intellij.common.AzureIcons;
 import com.microsoft.azure.toolkit.intellij.common.action.IntellijAzureActionManager;
+import com.microsoft.azure.toolkit.lib.AzService;
 import com.microsoft.azure.toolkit.lib.common.action.Action;
 import com.microsoft.azure.toolkit.lib.common.action.ActionGroup;
 import com.microsoft.azure.toolkit.lib.common.messager.AzureMessager;
@@ -262,7 +263,11 @@ public class Tree extends SimpleTree implements DataProvider {
             } else if (StringUtils.isNotBlank(view.getIconPath())) {
                 renderer.setIcon(AzureIcons.getIcon(view.getIconPath(), Tree.class));
             }
-            renderer.append(view.getLabel());
+            if (node.inner.data() instanceof AzService) {
+                renderer.append(view.getLabel(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
+            } else {
+                renderer.append(view.getLabel());
+            }
             renderer.append(Optional.ofNullable(view.getDescription()).map(d -> " " + d).orElse(""), SimpleTextAttributes.GRAY_ATTRIBUTES, true);
             renderer.setToolTipText(Optional.ofNullable(view.getDescription()).map(d -> view.getLabel() + ":" + d).orElse(view.getLabel()));
         }

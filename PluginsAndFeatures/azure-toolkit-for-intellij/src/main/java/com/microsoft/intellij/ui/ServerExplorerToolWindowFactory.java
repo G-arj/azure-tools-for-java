@@ -20,12 +20,14 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.ComponentUtil;
 import com.intellij.ui.LoadingNode;
+import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
 import com.microsoft.azure.arcadia.serverexplore.ArcadiaSparkClusterRootModuleImpl;
 import com.microsoft.azure.cosmosspark.serverexplore.cosmossparknode.CosmosSparkClusterRootModuleImpl;
 import com.microsoft.azure.hdinsight.common.HDInsightUtil;
+import com.microsoft.azure.hdinsight.serverexplore.hdinsightnode.HDInsightRootModule;
 import com.microsoft.azure.sqlbigdata.serverexplore.SqlBigDataClusterModule;
 import com.microsoft.azure.toolkit.intellij.explorer.AzureExplorer;
 import com.microsoft.azure.toolkit.lib.common.action.Action;
@@ -48,6 +50,7 @@ import com.microsoft.tooling.msservices.serviceexplorer.Node;
 import com.microsoft.tooling.msservices.serviceexplorer.NodeAction;
 import com.microsoft.tooling.msservices.serviceexplorer.RefreshableNode;
 import com.microsoft.tooling.msservices.serviceexplorer.azure.AzureModule;
+import com.microsoft.tooling.msservices.serviceexplorer.azure.container.ContainerRegistryModule;
 import com.microsoft.tooling.msservices.serviceexplorer.azure.function.FunctionModule;
 import com.microsoft.tooling.msservices.serviceexplorer.azure.rediscache.RedisCacheModule;
 import com.microsoft.tooling.msservices.serviceexplorer.azure.storage.StorageModule;
@@ -425,9 +428,14 @@ public class ServerExplorerToolWindowFactory implements ToolWindowFactory, Prope
             } else if (value instanceof LoadingNode) {
                 super.customizeCellRenderer(jtree, value, selected, expanded, isLeaf, row, focused);
                 return;
+            } else {
+                final Node node = ((SortableTreeNode) value).getNode();
+                if (node instanceof AzureModule || node instanceof HDInsightRootModule || node instanceof ContainerRegistryModule) {
+                    this.append(node.getName(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES, true);
+                } else {
+                    super.customizeCellRenderer(jtree, value, selected, expanded, isLeaf, row, focused);
+                }
             }
-            super.customizeCellRenderer(jtree, value, selected, expanded, isLeaf, row, focused);
-
             // if the node has an icon set then we use that
             SortableTreeNode treeNode = (SortableTreeNode) value;
             Node node = (Node) treeNode.getUserObject();

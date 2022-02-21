@@ -7,12 +7,14 @@ package com.microsoft.intellij.ui;
 
 import com.microsoft.tooling.msservices.serviceexplorer.Node;
 import com.microsoft.tooling.msservices.serviceexplorer.Sortable;
+import lombok.Getter;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
 public class SortableTreeNode extends DefaultMutableTreeNode implements Sortable {
 
+    @Getter
     private Node node;
 
     public SortableTreeNode() {
